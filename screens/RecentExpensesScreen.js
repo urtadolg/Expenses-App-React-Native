@@ -1,13 +1,10 @@
-import { View, Text } from "react-native";
-import EXPENSES from "../data/EXPENSES";
+import { useSelector } from "react-redux";
 import ExpensesList from "../components/ExpensesList";
 
 const RecentExpensesScreen = () => {
-   return (
-      <ExpensesList
-         data={EXPENSES.filter((expense) => expense.date.slice(0, 4) >= 2022)}
-      />
-   );
+   const data = useSelector((state) => state.expenses.recentExpenses);
+
+   return <ExpensesList list="recent" />;
 };
 
 export default RecentExpensesScreen;

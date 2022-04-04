@@ -1,9 +1,7 @@
-import { View, Text } from "react-native";
 import ExpensesList from "../components/ExpensesList";
-import EXPENSES from "../data/EXPENSES";
 
 const AllExpensesScreen = () => {
-   return <ExpensesList data={EXPENSES} />;
+   return <ExpensesList list="all" />;
 };
 
 export default AllExpensesScreen;

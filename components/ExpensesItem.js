@@ -6,10 +6,17 @@ import {
    Text,
    StyleSheet,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
-const ExpensesItem = ({ name, date, value }) => {
+const ExpensesItem = ({ name, date, value, id }) => {
+   const navigate = useNavigation();
+
+   const onItemPressHandler = () => {
+      navigate.navigate("Edit Expenses", { id: id });
+   };
+
    return (
-      <Pressable>
+      <Pressable onPress={onItemPressHandler}>
          <View style={styles.itemContainer}>
             <View>
                <Text style={styles.name}>{name}</Text>

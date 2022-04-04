@@ -7,16 +7,23 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
+import EditExpenseScreen from "./screens/EditExpenseScreen";
+import AddExpenseScreen from "./screens/AddExpenseScreen";
+import { useNavigation } from "@react-navigation/native";
+import store from "./store/index";
+import { Provider } from "react-redux";
 
 const Stack = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator();
 
 export default function App() {
    const BottomTabNavigator = () => {
+      const navigator = useNavigation();
+
       return (
          <BottomTab.Navigator
             sceneContainerStyle={{ backgroundColor: "#3300aa" }}
-            screenOptions={{
+            screenOptions={({ navigation }) => ({
                headerTintColor: "white",
                headerStyle: { backgroundColor: "#4c00ff" },
                tabBarStyle: { backgroundColor: "#4c00ff" },
@@ -28,11 +35,12 @@ export default function App() {
                            ? [styles.addBtn, styles.addBtnPressed]
                            : styles.addBtn
                      }
+                     onPress={() => navigation.navigate("Add Expense")}
                   >
                      <Ionicons color={tintColor} name="add" size={30} />
                   </Pressable>
                ),
-            }}
+            })}
          >
             <BottomTab.Screen
                name="Recent Added Expenses"
@@ -60,7 +68,7 @@ export default function App() {
    };
 
    return (
-      <>
+      <Provider store={store}>
          <StatusBar style="light" />
          <NavigationContainer>
             <Stack.Navigator
@@ -76,13 +84,14 @@ export default function App() {
                   component={BottomTabNavigator}
                   options={{ headerShown: false }}
                />
-               {/*                <Stack.Screen
-                  name="Recent Expenses"
-                  component={RecentExpensesScreen}
-               /> */}
+               <Stack.Screen
+                  name="Edit Expenses"
+                  component={EditExpenseScreen}
+               />
+               <Stack.Screen name="Add Expense" component={AddExpenseScreen} />
             </Stack.Navigator>
          </NavigationContainer>
-      </>
+      </Provider>
    );
 }
 

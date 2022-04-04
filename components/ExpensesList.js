@@ -1,10 +1,17 @@
 import { ScrollView, FlatList, View, Text, StyleSheet } from "react-native";
-//import EXPENSES from "../data/EXPENSES";
+import { useSelector } from "react-redux";
 import EmptyExpensesList from "./EmptyExpensesList";
 import ExpensesItem from "./ExpensesItem";
 import TotalDisplay from "./TotalDisplay";
 
-const ExpensesList = ({ data }) => {
+const ExpensesList = ({ list }) => {
+   let data;
+   if (list === "all") {
+      data = useSelector((state) => state.expenses.allExpenses);
+   } else {
+      data = useSelector((state) => state.expenses.recentExpenses);
+   }
+
    if (data.length === 0) {
       return <EmptyExpensesList />;
    } else {
@@ -19,12 +26,13 @@ const ExpensesList = ({ data }) => {
             <FlatList
                style={styles.listContainer}
                data={data}
-               keyExtractor={(item, index) => index}
+               keyExtractor={(item, index) => item.id}
                renderItem={(itemData) => (
                   <ExpensesItem
                      name={itemData.item.name}
                      date={itemData.item.date}
                      value={itemData.item.value}
+                     id={itemData.item.id}
                   />
                )}
             />
