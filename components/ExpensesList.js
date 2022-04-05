@@ -4,12 +4,29 @@ import EmptyExpensesList from "./EmptyExpensesList";
 import ExpensesItem from "./ExpensesItem";
 import TotalDisplay from "./TotalDisplay";
 
-const ExpensesList = ({ list }) => {
+const ExpensesList = ({ period }) => {
+   let expensesList = useSelector((state) => state.expenses.allExpenses);
+
+   const date = new Date();
+
+   const getDateMinusDays = (date, days) => {
+      return new Date(
+         date.getFullYear(),
+         date.getMonth(),
+         date.getDate() - days
+      );
+   };
+
+   const date7DaysAgo = getDateMinusDays(date, 7);
+
    let data;
-   if (list === "all") {
-      data = useSelector((state) => state.expenses.allExpenses);
+
+   if (period === "Last 7 days") {
+      data = expensesList.filter(
+         (expense) => new Date(expense.date) >= date7DaysAgo
+      );
    } else {
-      data = useSelector((state) => state.expenses.recentExpenses);
+      data = expensesList;
    }
 
    if (data.length === 0) {

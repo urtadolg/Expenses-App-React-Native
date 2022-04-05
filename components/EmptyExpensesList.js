@@ -13,6 +13,8 @@ export default EmptyExpensesList;
 const styles = StyleSheet.create({
    container: {
       flex: 1,
+      height: 200,
+      justifyContent: "center",
    },
    message: {
       color: "white",

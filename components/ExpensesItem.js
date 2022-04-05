@@ -1,11 +1,4 @@
-import {
-   FlatList,
-   ScrollView,
-   View,
-   Pressable,
-   Text,
-   StyleSheet,
-} from "react-native";
+import { View, Pressable, Text, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 const ExpensesItem = ({ name, date, value, id }) => {

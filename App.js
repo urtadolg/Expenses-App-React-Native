@@ -1,25 +1,22 @@
 import React from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Pressable } from "react-native";
+import { StyleSheet } from "react-native";
 import AllExpensesScreen from "./screens/AllExpensesScreen";
 import RecentExpensesScreen from "./screens/RecentExpensesScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
-import EditExpenseScreen from "./screens/EditExpenseScreen";
-import AddExpenseScreen from "./screens/AddExpenseScreen";
-import { useNavigation } from "@react-navigation/native";
+import ManageExpensesScreen from "./screens/ManageExpensesScreen";
 import store from "./store/index";
 import { Provider } from "react-redux";
+import IconButton from "./components/UI/IconButton";
 
 const Stack = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator();
 
 export default function App() {
    const BottomTabNavigator = () => {
-      const navigator = useNavigation();
-
       return (
          <BottomTab.Navigator
             sceneContainerStyle={{ backgroundColor: "#3300aa" }}
@@ -29,16 +26,13 @@ export default function App() {
                tabBarStyle: { backgroundColor: "#4c00ff" },
                tabBarActiveTintColor: "#ffd755",
                headerRight: ({ tintColor }) => (
-                  <Pressable
-                     style={({ pressed }) =>
-                        pressed
-                           ? [styles.addBtn, styles.addBtnPressed]
-                           : styles.addBtn
-                     }
+                  <IconButton
+                     name="add"
+                     color={tintColor}
+                     size={30}
+                     style={{ marginRight: 10 }}
                      onPress={() => navigation.navigate("Add Expense")}
-                  >
-                     <Ionicons color={tintColor} name="add" size={30} />
-                  </Pressable>
+                  />
                ),
             })}
          >
@@ -86,18 +80,14 @@ export default function App() {
                />
                <Stack.Screen
                   name="Edit Expenses"
-                  component={EditExpenseScreen}
+                  component={ManageExpensesScreen}
                />
-               <Stack.Screen name="Add Expense" component={AddExpenseScreen} />
+               <Stack.Screen
+                  name="Add Expense"
+                  component={ManageExpensesScreen}
+               />
             </Stack.Navigator>
          </NavigationContainer>
       </Provider>
    );
 }
-
-const styles = StyleSheet.create({
-   addBtn: { marginRight: 10 },
-   addBtnPressed: {
-      opacity: 0.25,
-   },
-});
