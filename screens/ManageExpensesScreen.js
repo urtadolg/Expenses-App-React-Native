@@ -1,11 +1,16 @@
+import { useState } from "react";
 import { View, StyleSheet } from "react-native";
-import Button from "../components/UI/Button";
 import IconButton from "../components/UI/IconButton";
 import { useDispatch, useSelector } from "react-redux";
 import { ExpensesActions } from "../store/ExpensesSlice";
 import ExpensesForm from "../components/ManageExpenses/ExpensesForm";
+import { storeExpense, updateExpense, deleteExpense } from "../util/http";
+import LoadingOverlay from "../components/UI/LoadingOverlay";
+import ErrorOverlay from "../components/UI/ErrorOverlay";
 
 const ManageExpenses = ({ route, navigation }) => {
+   const [isLoading, setIsLoading] = useState(false);
+   const [error, setError] = useState();
    const expenseId = route.params?.id;
    const isEditing = !!expenseId;
    const dispatch = useDispatch();
@@ -18,30 +23,42 @@ const ManageExpenses = ({ route, navigation }) => {
       navigation.goBack();
    };
 
-   const getFormatedDate = (date) => {
-      const formatedYear = date.getFullYear();
-      let month = date.getMonth() + 1;
-      let day = date.getDate();
-
-      const formatedMonth = month < 10 ? `0${month}` : `${month}`;
-      const formatedDay = day < 10 ? `0${day}` : `${day}`;
-
-      return `${formatedYear}-${formatedMonth}-${formatedDay}`;
-   };
-
-   const onConfirmHandler = (data) => {
-      if (isEditing) {
-         (data.id = expenseId), dispatch(ExpensesActions.updateExpense(data));
-      } else {
-         dispatch(ExpensesActions.addExpense(data));
+   const onConfirmHandler = async (data) => {
+      setIsLoading(true);
+      try {
+         if (isEditing) {
+            await updateExpense(data.id, data);
+            dispatch(ExpensesActions.updateExpense(data));
+         } else {
+            const id = await storeExpense(data);
+            dispatch(ExpensesActions.addExpense({ ...data, id: id }));
+         }
+         navigation.goBack();
+      } catch (error) {
+         setError("Unable to save the data. Please try again later.");
+         setIsLoading(false);
       }
-      navigation.goBack();
    };
 
    const onDeleteHandler = () => {
       dispatch(ExpensesActions.removeExpense(expenseId));
+      setIsLoading(true);
+      try {
+         deleteExpense(expenseId);
+      } catch (error) {
+         setError("Unable to delete. Please try again later.");
+         setIsLoading(false);
+      }
       navigation.goBack();
    };
+
+   if (isLoading) {
+      return <LoadingOverlay />;
+   }
+
+   if (!isLoading && error) {
+      return <ErrorOverlay errorMessage={error} />;
+   }
 
    return (
       <View style={styles.container}>

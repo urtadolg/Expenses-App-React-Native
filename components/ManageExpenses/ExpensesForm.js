@@ -5,6 +5,7 @@ import Button from "../UI/Button";
 
 const ExpensesForm = ({ isEditing, onConfirm, onCancel, defaultValue }) => {
    const [dataValidation, setDataValidation] = useState({
+      id: true,
       amount: true,
       date: true,
       description: true,
@@ -14,6 +15,7 @@ const ExpensesForm = ({ isEditing, onConfirm, onCancel, defaultValue }) => {
       !dataValidation.date ||
       !dataValidation.description;
    const [enteredData, setEnteredData] = useState({
+      id: defaultValue ? defaultValue.id : "",
       amount: defaultValue ? defaultValue.value.toString() : "",
       date: defaultValue ? defaultValue.date : "",
       description: defaultValue ? defaultValue.name : "",
@@ -35,7 +37,7 @@ const ExpensesForm = ({ isEditing, onConfirm, onCancel, defaultValue }) => {
 
    const onSubmitHandler = () => {
       const data = {
-         id: Math.random(),
+         id: enteredData.id,
          value: +enteredData.amount,
          date: enteredData.date,
          name: enteredData.description,
